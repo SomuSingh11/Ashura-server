@@ -158,7 +158,9 @@ class CoreWebSocketServer {
     }
 
     this.devices.set(deviceId, device);
+    //console.log(this.devices.values());
     this.connectionMap.set(ws, deviceId);
+    //console.log(this.connectionMap.values());
 
     console.log(`Device registered: ${deviceId} (${deviceType})`);
     console.log(`Total devices: ${this.devices.size}`);
@@ -281,12 +283,12 @@ class CoreWebSocketServer {
   private startHeartbeatChecker() {
     this.heartbeatInterval = setInterval(() => {
       const now = Date.now();
-      const timeout = 30000;
+      const timeout = 10000;
 
       this.devices.forEach((device, deviceId) => {
         if (now - device.lastHeartbeat > timeout) {
           console.log(`Device ${deviceId} timed out, removing...`);
-          
+
           this.connectionMap.delete(device.ws);
           device.ws.close();
           this.devices.delete(deviceId);
